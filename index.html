@@ -4,48 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Requisição Assíncrona</title>
-</head>
-
-<body>
-
-  <div id="container">
-<h1>SITE SOMENTE PRA HANNAH</h1><br>
-
-    <label for="inputText">Digite algo:</label>
-    <input type="text" id="inputText" />
-    <button onclick="makeRequest()">Fazer Requisição</button>
-    <div id="result"></div>
-<h6>Só use se seu nome for Hannah</h6>
-
-  </div>
-
-  <script>
-    function makeRequest() {
-      const inputText = document.getElementById('inputText').value;
-      const resultDiv = document.getElementById('result');
-
-      // Verifica se o campo de entrada não está vazio
-      if (inputText.trim() === '') {
-        resultDiv.innerHTML = 'Por favor, digite algo.';
-        return;
-      }
-
-      // Faz a requisição assíncrona usando a API JSONPlaceholder como exemplo
-      fetch(`https://publica.cnpj.ws/cnpj/${inputText}`)
-        .then(response => response.json())
-        .then(data => {
-          // Mostra o resultado na div
-          resultDiv.innerHTML = `<strong>Resultado:</strong> ${JSON.stringify(data)}`;
-        })
-        .catch(error => {
-          console.error('Erro na requisição:', error);
-          resultDiv.innerHTML = 'Erro na requisição. Por favor, tente novamente.';
-        });
-    }
-  </script>
-</body>
-</html>
- <style>
+  <style>
     body {
       font-family: Arial, sans-serif;
       display: flex;
@@ -64,5 +23,70 @@
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
+      max-height: 700px; /* Set a maximum height to enable scrolling */
+      overflow-y: auto; /* Enable vertical scrolling */
+      max-width: 900px; /* Set a maximum width for the div */
+      width: 100%; /* Ensure the width is 100% of its container */
     }
   </style>
+</head>
+
+<body>
+
+  <div id="container">
+    <h1>SITE SOMENTE PRA HANNAH</h1><br>
+
+    <label for="inputText">Digite um cnpj:</label>
+    <input type="text" id="inputText" />
+    <button onclick="makeRequest()">Fazer Requisição</button>
+    <div id="result"></div>
+    <h6>Só use se seu nome for Hannah</h6>
+
+  </div>
+
+  <script>
+    function makeRequest() {
+      const inputText = document.getElementById('inputText').value;
+      const resultDiv = document.getElementById('result');
+
+      // Verifica se o campo de entrada não está vazio
+      if (inputText.trim() === '') {
+        resultDiv.innerHTML = 'Por favor, digite algo.';
+        return;
+      }
+
+      // Divide os CNPJs com vírgula
+      const cnpjs = inputText.split(',');
+
+      cnpjs.forEach(function (elemento) {
+        // Faz a requisição assíncrona usando a API JSONPlaceholder como exemplo
+        fetch(`https://publica.cnpj.ws/cnpj/${elemento}`)
+          .then(response => response.json())
+          .then(data => {
+            // Mostra o resultado na div
+            console.log(parseInt(data['capital_social'].replace(".00","")))
+            console.log(data)
+            if(parseInt(data['capital_social'].replace(".00",""))>30000 && data['estabelecimento']['cidade']['nome']=='São Luís'){
+            resultDiv.innerHTML += `<strong>Resultado:</strong> <div> Razão Social:${data['razao_social']}\n
+                Capital social:${data['capital_social']}\n
+                Atualizado em:${data['atualizado_em']}\n
+                Sócios:${data['socios']}\n
+                Descrição:${data['descricao']}\n
+            
+                ${JSON.stringify(data)}</div><br>`;
+            
+            // Scroll down to show the new content
+            resultDiv.scrollTop = resultDiv.scrollHeight;
+          }})
+          .catch(error => {
+            console.error('Erro na requisição:', error);
+            resultDiv.innerHTML += 'Erro na requisição. Por favor, tente novamente.<br>';
+            
+            // Scroll down to show the new content
+            resultDiv.scrollTop = resultDiv.scrollHeight;
+          });
+      });
+    }
+  </script>
+</body>
+</html>
