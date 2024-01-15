@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Requisição Assíncrona</title>
+</head>
+
+<body>
+
+  <div id="container">
+<h1>SITE SOMENTE PRA HANNAH</h1><br>
+
+    <label for="inputText">Digite algo:</label>
+    <input type="text" id="inputText" />
+    <button onclick="makeRequest()">Fazer Requisição</button>
+    <div id="result"></div>
+<h6>Só use se seu nome for Hannah</h6>
+
+  </div>
+
+  <script>
+    function makeRequest() {
+      const inputText = document.getElementById('inputText').value;
+      const resultDiv = document.getElementById('result');
+
+      // Verifica se o campo de entrada não está vazio
+      if (inputText.trim() === '') {
+        resultDiv.innerHTML = 'Por favor, digite algo.';
+        return;
+      }
+
+      // Faz a requisição assíncrona usando a API JSONPlaceholder como exemplo
+      fetch(`https://publica.cnpj.ws/cnpj/${inputText}`)
+        .then(response => response.json())
+        .then(data => {
+          // Mostra o resultado na div
+          resultDiv.innerHTML = `<strong>Resultado:</strong> ${JSON.stringify(data)}`;
+        })
+        .catch(error => {
+          console.error('Erro na requisição:', error);
+          resultDiv.innerHTML = 'Erro na requisição. Por favor, tente novamente.';
+        });
+    }
+  </script>
+</body>
+</html>
+ <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #container {
+      text-align: center;
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
