@@ -87,13 +87,14 @@
             
             // Scroll down to show the new content
             resultDiv.scrollTop = resultDiv.scrollHeight;
-          });
-          setTimeout(function() {
+          }
+                );
+    
+
+            setTimeout(function() {
               resultDiv.innerHTML +=`\nRequisição realizada para ${data['razao_social']}, aguarde 20 segundos.`
               console.log("Passaram-se 20 segundos!");
-              }, 20000);  // 20000 milissegundos = 20 segundos
-
-      });
+              }, 20000);  // 20000 milissegundos = 20 segundos});
     }
   </script>
 </body>
