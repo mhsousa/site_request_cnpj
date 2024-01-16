@@ -30,8 +30,6 @@
     }
   </style>
 </head>
-<img src="bandeira.jpg" style="position:absolute;top:0px;left:0px;width:20%;height:25%;">
-<img src="marx.jpg" style="position:absolute;top:0px;right:0px;width:20%;height:25%;">
 
 <body>
 
@@ -43,7 +41,6 @@
     <button onclick="makeRequest()">Fazer Requisição</button>
     <div id="result"></div>
     <h6>Só use se seu nome for Hannah</h6>
-
   </div>
 
   <script>
@@ -60,43 +57,47 @@
       // Divide os CNPJs com vírgula
       const cnpjs = inputText.split(',');
 
-      cnpjs.forEach(function (elemento) {
+      function makeRequestWithDelay(index) {
+        if (index >= cnpjs.length) {
+          return;
+        }
+
+        const elemento = cnpjs[index];
         // Faz a requisição assíncrona usando a API JSONPlaceholder como exemplo
         fetch(`https://publica.cnpj.ws/cnpj/${elemento}`)
           .then(response => response.json())
           .then(data => {
-            // Mostra o resultado na div
-            console.log(parseInt(data['capital_social'].replace(".00","")))
-            console.log(data)
-            if(parseInt(data['capital_social'].replace(".00",""))>30000 && data['estabelecimento']['cidade']['nome']=='São Luís'){
-            resultDiv.innerHTML += `<strong>Resultado:</strong> <div> Razão Social:${data['razao_social']}\n
-                Capital social:${data['capital_social']}\n
-                Atualizado em:${data['atualizado_em']}\n
-                Sócios:${data['socios']}\n
-                Descrição:${data['descricao']}\n
+            console.log(parseInt(data['capital_social'].replace(".00","")));
+            console.log(data);
+            if (parseInt(data['capital_social'].replace(".00","")) > 30000 && data['estabelecimento']['cidade']['nome'] === 'São Luís') {
+              resultDiv.innerHTML += `<strong>Resultado:</strong> <div> Razão Social:${data['razao_social']}\n
+                  Capital social:${data['capital_social']}\n
+                  Atualizado em:${data['atualizado_em']}\n
+                  Sócios:${data['socios']}\n
+                  Descrição:${data['descricao']}\n
             
-                ${JSON.stringify(data)}</div><br>`;
-            
-            // Scroll down to show the new content
-            resultDiv.scrollTop = resultDiv.scrollHeight;
-              setTimeout(() => makeRequestWithDelay(index + 1), 20000);
-            
-          }})
+                  ${JSON.stringify(data)}</div><br>`;
+
+              // Scroll down to show the new content
+              resultDiv.scrollTop = resultDiv.scrollHeight;
+            }
+          })
           .catch(error => {
             console.error('Erro na requisição:', error);
             resultDiv.innerHTML += 'Erro na requisição. Por favor, tente novamente.<br>';
-            
+          })
+          .finally(() => {
             // Scroll down to show the new content
             resultDiv.scrollTop = resultDiv.scrollHeight;
-            setTimeout(() => makeRequestWithDelay(index + 1), 20000);
-         
-          }
-                );
-          
-    
 
-           
-    })
+            // Call the next request after a delay
+            setTimeout(() => makeRequestWithDelay(index + 1), 20000);
+          });
+      }
+
+      // Start the requests
+      makeRequestWithDelay(0);
+    }
   </script>
 </body>
 </html>
