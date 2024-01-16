@@ -80,20 +80,17 @@
             // Scroll down to show the new content
             resultDiv.scrollTop = resultDiv.scrollHeight;
             
-          }
-          
-           setTimeout(function() {
-              resultDiv.innerHTML +=`\nRequisição realizada para ${data['razao_social']}, aguarde 20 segundos.`
-              console.log("Passaram-se 20 segundos!");
-              }, 20000);  // 20000 milissegundos = 20 segundos});
-          })
+          }})
           .catch(error => {
             console.error('Erro na requisição:', error);
             resultDiv.innerHTML += 'Erro na requisição. Por favor, tente novamente.<br>';
             
             // Scroll down to show the new content
             resultDiv.scrollTop = resultDiv.scrollHeight;
-          }
+            setTimeout(function() {
+              resultDiv.innerHTML +=`\nRequisição realizada para ${data['razao_social']}, aguarde 20 segundos.`
+              console.log("Passaram-se 20 segundos!");
+              }, 20000);  // 20000 milissegundos = 20 segundos});}
                 );
     
 
